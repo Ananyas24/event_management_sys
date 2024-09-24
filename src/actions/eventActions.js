@@ -3,7 +3,7 @@ import axios from 'axios';
 // Action to fetch events
 export const fetchEvents = () => async (dispatch) => {
   try {
-    const res = await axios.get('http://localhost:5000/api/events');
+    const res = await axios.get('https://event-management-backend-zl2d.onrender.com/api/events');
     dispatch({ type: 'SET_EVENTS', payload: res.data });
   } catch (error) {
     console.error('Error fetching events:', error);
