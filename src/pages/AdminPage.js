@@ -26,7 +26,7 @@ const AdminPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/events', {
+      const response = await axios.post('https://event-management-backend-zl2d.onrender.com/api/events', {
         name,
         description,
         date,
