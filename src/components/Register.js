@@ -14,7 +14,7 @@ const Register = () => {
     e.preventDefault();
     setLoading(true); // Set loading state to true
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post('https://event-management-backend-zl2d.onrender.com/api/auth/register', {
         username,
         password,
         role,
