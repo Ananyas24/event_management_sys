@@ -1,71 +1,59 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { Form, Button, Container } from 'react-bootstrap';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('User'); // Default role is 'User'
+  const [role, setRole] = useState('User');
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading state to true
     try {
-      await axios.post('https://event-management-backend-zl2d.onrender.com/api/auth/register', {
-        username,
-        password,
-        role,
-      });
+      await axios.post('/api/auth/register', { username, password, role });
       setMessage('User registered successfully! Redirecting to login...');
-      setTimeout(() => {
-        setLoading(false); // Stop loading
-        navigate('/login'); // Redirect to login after successful registration
-      }, 2000); // 2-second delay before redirecting
+      setTimeout(() => navigate('/login'), 2000);
     } catch (error) {
-      setLoading(false); // Stop loading
       setMessage('Registration failed. Please try again.');
-      console.error(error.response ? error.response.data : error.message);
     }
   };
 
   return (
-    <div>
+    <Container>
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Username</Form.Label>
+          <Form.Control
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Role:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Role</Form.Label>
+          <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="User">User</option>
             <option value="Admin">Admin</option>
-          </select>
-        </div>
-        <button type="submit" disabled={loading}> {/* Disable button while loading */}
-          {loading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+          </Form.Control>
+        </Form.Group>
+        <Button type="submit">Register</Button>
+        {message && <p>{message}</p>}
+      </Form>
+    </Container>
   );
 };
 

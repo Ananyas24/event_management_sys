@@ -1,12 +1,14 @@
 import React from 'react';
-import EventList from '../components/EventList';
+import { Container } from 'react-bootstrap';
 
 const HomePage = () => {
   return (
-    <div>
-      <h1>Welcome to Event Management</h1>
-      <EventList />
-    </div>
+    <Container className="mt-5">
+      <h1>Welcome to the Event Management System</h1>
+      <p>
+        This platform allows users to register for events and admins to manage events.
+      </p>
+    </Container>
   );
 };
 

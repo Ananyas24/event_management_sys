@@ -1,24 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import AdminPage from './pages/AdminPage';
-import UserPage from './pages/UserPage';
-import Login from './components/Login';
-import Register from './components/Register';  // Import Register component
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import './App.css';
+import Login from './components/Login';
+import Register from './components/Register';
+import AdminPage from './pages/AdminPage';
+import HomePage from './pages/HomePage';
+
+import EventList from './components/EventList';
+import UserPage from './pages/UserPage';
 
 const App = () => {
   return (
     <Router>
-      <div className="App">
-        <Navbar />
+      <Navbar />
+      <div className="container">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/events" element={<EventList />} />
           <Route path="/user" element={<UserPage />} />
-          <Route path="/register" element={<Register />} /> {/* Add Register route */}
         </Routes>
       </div>
     </Router>

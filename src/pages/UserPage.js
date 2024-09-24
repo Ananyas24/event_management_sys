@@ -1,14 +1,19 @@
 import React from 'react';
-import EventList from '../components/EventList';
-import EventRegistration from '../components/EventRegistration';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom'; 
 
 const UserPage = () => {
+  const user = useSelector((state) => state.auth.user);
+
+  // If user is not authenticated, redirect to login
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
   return (
     <div>
-      <h1>Event Registration</h1>
-      <EventList />
-      {/* Example usage of event registration, eventId should be dynamic */}
-      <EventRegistration eventId="exampleEventId" />
+      <h1>Welcome to your dashboard, {user.username}</h1>
+      {/* Rest of your dashboard content */}
     </div>
   );
 };

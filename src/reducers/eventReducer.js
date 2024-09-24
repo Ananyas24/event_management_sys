@@ -1,11 +1,16 @@
-// eventReducer.js
-const initialState = [];
+import { SET_EVENTS, EVENT_REGISTER_SUCCESS } from '../actions/types';
 
-export const eventsReducer = (state = initialState, action) => {
+const initialState = {
+  events: [],
+};
+
+export default function eventReducer(state = initialState, action) {
   switch (action.type) {
-    case 'SET_EVENTS':
-      return action.payload; // Update the state with the fetched events
+    case SET_EVENTS:
+      return { ...state, events: action.payload };
+    case EVENT_REGISTER_SUCCESS:
+      return state;
     default:
       return state;
   }
-};
+}

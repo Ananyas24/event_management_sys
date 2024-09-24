@@ -1,59 +1,58 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEvents, registerEvent } from '../actions/eventActions';  // Import actions
+import { fetchEvents, registerEvent } from '../actions/eventActions';
+import { Card, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 
 const EventList = () => {
   const dispatch = useDispatch();
-
-  // Safely accessing events with a fallback to an empty array
-  const events = useSelector((state) => state.events || []);
-  const token = useSelector((state) => state.auth?.token); // Safe access using optional chaining
+  const events = useSelector((state) => state.events.events || []);
+  const token = useSelector((state) => state.auth.token);
+  const [message, setMessage] = useState(''); // State to display feedback message
 
   useEffect(() => {
     dispatch(fetchEvents());  // Fetch events when the component loads
   }, [dispatch]);
 
-  const handleRegister = (eventId) => {
+  const handleRegister = async (eventId) => {
     if (token) {
-      dispatch(registerEvent(eventId));  // Register for event when the button is clicked
+      try {
+        await dispatch(registerEvent(eventId));
+        setMessage('You have successfully registered for the event!');
+      } catch (error) {
+        setMessage('There was an error registering for the event. Please try again.');
+      }
     } else {
-      console.error('User is not logged in');
-      // Optionally, display a login prompt or redirect to login page
+      setMessage('Please log in to register for an event.');
     }
   };
 
   return (
-    <div>
+    <Container>
       <h2>Events</h2>
-      {events.length === 0 ? (  // Check if events array is empty
-        <p>No events available. Please check back later.</p>
-      ) : (
-        <table border="1" cellPadding="10">
-          <thead>
-            <tr>
-              <th>Event Name</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {events.map((event) => (
-              <tr key={event._id}>
-                <td>{event.name}</td>
-                <td>{event.description}</td>
-                <td>{new Date(event.date).toLocaleDateString()}</td>
-                <td>
-                  <button onClick={() => handleRegister(event._id)}>
-                    Register
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+      
+      {/* Show feedback message */}
+      {message && <Alert variant="info">{message}</Alert>}
+      
+      <Row>
+        {events.map((event) => (
+          <Col key={event._id} md={4}>
+            <Card className="mb-4">
+              <Card.Body>
+                <Card.Title>{event.name}</Card.Title>
+                <Card.Text>{event.description}</Card.Text>
+                <Card.Text>{new Date(event.date).toLocaleDateString()}</Card.Text>
+                <Button 
+                  variant="primary" 
+                  onClick={() => handleRegister(event._id)}
+                >
+                  Register
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 };
 
