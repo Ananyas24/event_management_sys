@@ -11,6 +11,13 @@ import {
 
 // Fetch all events
 export const fetchEvents = () => async (dispatch) => {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    console.error('No token found');
+    return;
+  }
+
   try {
     const response = await axios.get('/api/events');
     dispatch({

@@ -26,6 +26,7 @@ const AdminDashboard = () => {
   // Handle event creation
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await axios.post('/api/events', { name, description, date });
       toast.success('Event created successfully!');
