@@ -1,28 +1,30 @@
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, REGISTER_SUCCESS } from '../actions/types';
+
 const initialState = {
-  token: null,
-  user: null,
-  isAuthenticated: false, // Track if the user is authenticated
+  token: localStorage.getItem('token'),
+  isAuthenticated: null,
+  error: null,
 };
 
-const authReducer = (state = initialState, action) => {
+export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case 'LOGIN_SUCCESS':
+    case LOGIN_SUCCESS:
+    case REGISTER_SUCCESS:
       return {
         ...state,
-        token: action.payload.token,
-        user: action.payload.user,
-        isAuthenticated: true, // Set to true on login success
+        token: action.payload,
+        isAuthenticated: true,  // Set authenticated to true
+        error: null,
       };
-    case 'LOGOUT':
+    case LOGIN_FAIL:
+    case LOGOUT:
       return {
         ...state,
         token: null,
-        user: null,
-        isAuthenticated: false, // Reset on logout
+        isAuthenticated: false,  // Set authenticated to false
+        error: action.payload,
       };
     default:
       return state;
   }
-};
-
-export default authReducer;
+}

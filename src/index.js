@@ -1,12 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
+import store from './store/store';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';  // Import Toastify CSS
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
+    <Router>
+      <App />
+    </Router>
+  </Provider>
 );

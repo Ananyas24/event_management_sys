@@ -1,33 +1,72 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import {
+  FETCH_EVENTS_SUCCESS,
+  FETCH_EVENTS_FAIL,
+  CREATE_EVENT_SUCCESS,
+  CREATE_EVENT_FAIL,
+  REGISTER_EVENT_SUCCESS,
+  REGISTER_EVENT_FAIL
+} from './types';
 
-// Action to fetch events
+// Fetch all events
 export const fetchEvents = () => async (dispatch) => {
   try {
-    const res = await axios.get('http://localhost:5000/api/events');
-    dispatch({ type: 'SET_EVENTS', payload: res.data });
-  } catch (error) {
-    console.error('Error fetching events:', error);
+    const response = await axios.get('/api/events');
+    dispatch({
+      type: FETCH_EVENTS_SUCCESS,
+      payload: response.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: FETCH_EVENTS_FAIL,
+      payload: err.response ? err.response.data.error : 'Failed to fetch events',
+    });
   }
 };
 
-export const registerEvent = (eventId) => async (dispatch, getState) => {
-  const { token } = getState().auth;  // Ensure the token is retrieved from state
-
-  if (!token) {
-    console.error('No token found. User is not logged in.');
-    return;
-  }
-
+export const createEvent = (eventData, navigate) => async (dispatch) => {
   try {
-    const response = await axios.post(`/api/events/register-event/${eventId}`, {}, {
+    const token = localStorage.getItem('token');
+    const response = await axios.post('/api/events', eventData, {
       headers: {
-        Authorization: `Bearer ${token}`,  // Correct Bearer token format
+        Authorization: `Bearer ${token}`,
       },
     });
-    dispatch(fetchEvents());  // Fetch events again after registration
-  } catch (error) {
-    console.error('Error registering for event:', error.response ? error.response.data : error.message);
+    dispatch({
+      type: CREATE_EVENT_SUCCESS,
+      payload: response.data,
+    });
+    toast.success("Event created successfully");
+    navigate('/admin');
+  } catch (err) {
+    dispatch({
+      type: CREATE_EVENT_FAIL,
+      payload: err.response.data.error,
+    });
+    toast.error("Failed to create event");
   }
 };
 
-
+// Register for an event
+export const registerEvent = (eventId) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(`/api/events/register/${eventId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    dispatch({
+      type: REGISTER_EVENT_SUCCESS,
+      payload: response.data,
+    });
+    toast.success("Registered for event successfully");
+  } catch (err) {
+    dispatch({
+      type: REGISTER_EVENT_FAIL,
+      payload: err.response ? err.response.data.error : 'Failed to register for event',
+    });
+    toast.error('Failed to register for event');
+  }
+};

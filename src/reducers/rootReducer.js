@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
-import { eventsReducer } from './eventReducer';
-import authReducer from './authReducer';  // Import the new auth reducer
+import authReducer from './authReducer';
+import eventReducer from './eventReducer';
 
-const rootReducer = combineReducers({
-  events: eventsReducer,  // Handles events-related state
-  auth: authReducer,      // Handles authentication-related state
+export default combineReducers({
+  auth: authReducer,
+  event: eventReducer,
 });
-
-export default rootReducer;
