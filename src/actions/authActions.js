@@ -34,24 +34,36 @@ export const loadUser = () => async (dispatch) => {
 export const login = (credentials) => async (dispatch) => {
   try {
     const res = await axios.post('/api/auth/login', credentials);
+    console.log('Login response:', res); // Log the entire response
+
     const { token, user } = res.data;
+    if (token) {
+      localStorage.setItem('token', token); // Save token to localStorage
+      console.log('Token saved to localStorage:', token); // Confirm token is saved
 
-    localStorage.setItem('token', token); // Save token to localStorage
+      // Set token in headers for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    // Set token in headers for future requests
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: { token, user },
-    });
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: { token, user },
+      });
+    } else {
+      console.error('No token received from login response.');
+      dispatch({
+        type: LOGIN_FAILURE,
+        payload: 'Login failed: No token received.',
+      });
+    }
   } catch (error) {
+    console.error('Login failed with error:', error); // Log the error details
     dispatch({
       type: LOGIN_FAILURE,
       payload: error.response ? error.response.data : error.message,
     });
   }
 };
+
 
 // Logout user
 export const logout = () => (dispatch) => {
