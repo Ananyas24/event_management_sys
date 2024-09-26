@@ -15,6 +15,10 @@ export const fetchEvents = () => async (dispatch) => {
 
 export const registerEvent = (eventId) => async (dispatch) => {
   const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found');
+    return;
+  }
   try {
     await axios.post(
       `/api/events/register-event/${eventId}`,
